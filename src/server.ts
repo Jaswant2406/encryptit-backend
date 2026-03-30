@@ -84,7 +84,7 @@ app.post('/api/login', asyncHandler(async (req: Request, res: Response) => {
 
 // ===================== FILES =====================
 
-app.get('/api/files', authenticateToken, asyncHandler(async (req: any, res) => {
+app.get('/api/files', authenticateToken, asyncHandler(async (req: any, res: Response) => {
   const db = getDb();
 
   const files = db.prepare(
@@ -94,7 +94,7 @@ app.get('/api/files', authenticateToken, asyncHandler(async (req: any, res) => {
   res.json(files);
 }));
 
-app.post('/api/files', authenticateToken, asyncHandler(async (req: any, res) => {
+app.post('/api/files', authenticateToken, asyncHandler(async (req: any, res: Response) => {
   const db = getDb();
   const f = req.body;
 
@@ -118,7 +118,7 @@ app.post('/api/files', authenticateToken, asyncHandler(async (req: any, res) => 
 
 // ===================== PROFILE =====================
 
-app.get('/api/me', authenticateToken, asyncHandler(async (req: any, res) => {
+app.get('/api/me', authenticateToken, asyncHandler(async (req: any, res: Response) =>{
   const db = getDb();
 
   const user = db.prepare(
@@ -128,7 +128,7 @@ app.get('/api/me', authenticateToken, asyncHandler(async (req: any, res) => {
   res.json(user);
 }));
 
-app.post('/api/update-profile', authenticateToken, asyncHandler(async (req: any, res) => {
+app.post('/api/update-profile', authenticateToken, asyncHandler(async (req: any, res: Response) => {
   const db = getDb();
 
   db.prepare(

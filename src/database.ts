@@ -1,6 +1,6 @@
 import Database from "better-sqlite3";
 
-let db: Database;
+let db: any;
 
 export function getDb() {
   if (!db) {
