@@ -1,16 +1,12 @@
-import sqlite3 from 'sqlite3';
-import { open, Database } from 'sqlite';
+import Database from "better-sqlite3";
 
-let db: Database | null = null;
+let db: Database;
 
-export async function getDb() {
+export function getDb() {
   if (!db) {
-    db = await open({
-      filename: '/tmp/database.sqlite',
-      driver: sqlite3.Database
-    });
+    db = new Database("/tmp/database.sqlite");
 
-    await db.exec(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         email TEXT UNIQUE,
@@ -23,7 +19,7 @@ export async function getDb() {
       )
     `);
 
-    await db.exec(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS files (
         id TEXT PRIMARY KEY,
         user_email TEXT,
@@ -33,24 +29,24 @@ export async function getDb() {
         date TEXT,
         encryption_type TEXT,
         entropy_before REAL,
-        entropy_after REAL,
-        FOREIGN KEY(user_email) REFERENCES users(email)
+        entropy_after REAL
       )
     `);
 
-    // Migration: Add missing columns if they don't exist
-    const tableInfo = await db.all("PRAGMA table_info(users)");
-    const columnNames = tableInfo.map(col => col.name);
+    // Migration check
+    const tableInfo = db.prepare("PRAGMA table_info(users)").all();
+    const columnNames = tableInfo.map((col: any) => col.name);
 
-    if (!columnNames.includes('email_verified')) {
-      await db.exec("ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0");
+    if (!columnNames.includes("email_verified")) {
+      db.exec("ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0");
     }
-    if (!columnNames.includes('verification_token')) {
-      await db.exec("ALTER TABLE users ADD COLUMN verification_token TEXT");
+    if (!columnNames.includes("verification_token")) {
+      db.exec("ALTER TABLE users ADD COLUMN verification_token TEXT");
     }
-    if (!columnNames.includes('name')) {
-      await db.exec("ALTER TABLE users ADD COLUMN name TEXT");
+    if (!columnNames.includes("name")) {
+      db.exec("ALTER TABLE users ADD COLUMN name TEXT");
     }
   }
+
   return db;
 }
