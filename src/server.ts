@@ -16,7 +16,7 @@ process.on('unhandledRejection', (reason, promise) => {
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClient = googleClientId ? new OAuth2Client(googleClientId) : null;
 
-async function startServer() {
+
   const app = express();
   const PORT = 3000;
 
@@ -367,8 +367,5 @@ async function startServer() {
     res.status(500).json({ detail: "An internal server error occurred" });
   });
 
- app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
-}
-startServer();
+ 
+export default app;
