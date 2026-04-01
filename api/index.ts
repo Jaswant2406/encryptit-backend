@@ -1,2 +1,2 @@
-import app from "../dist/server.js";   // MUST BE THIS
+import app from "../dist/server";   // MUST BE THIS
 export default app;
